@@ -2,6 +2,6 @@
 {
     public class Customer: BaseModel
     {
-        public IList<Contract> Contracts { get; set; }
+        public IList<Contract>? Contracts { get; set; }
     }
 }

@@ -6,6 +6,6 @@
 
         public Guid CustomerId { get; set; }
         public Customer Customer { get; set; }
-        public IList<ContractProduct> ContractProducts { get; set; }
+        public IList<ContractProduct>? ContractProducts { get; set; }
     }
 }

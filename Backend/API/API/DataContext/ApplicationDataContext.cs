@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.DataContext
 {
-    public class ContractContext : DbContext
+    public class ApplicationDataContext : DbContext
     {
         // Chuỗi kết nối tới CSDL (MS SQL Server)
         private const string connectionString = @"Server= localhost; Database= DotNetPractice; Integrated Security=True;";

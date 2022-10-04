@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace API.Migrations
 {
-    [DbContext(typeof(ContractContext))]
+    [DbContext(typeof(ApplicationDataContext))]
     [Migration("20221003171357_db-v2")]
     partial class dbv2
     {

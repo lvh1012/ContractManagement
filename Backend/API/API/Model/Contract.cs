@@ -1,11 +1,11 @@
 ﻿namespace API.Model
 {
-    public class Contract: BaseModel
+    public class Contract : BaseModel
     {
         public int Total { get; set; }
 
         public Guid CustomerId { get; set; }
         public Customer Customer { get; set; }
-        public IList<ContractProduct>? ContractProducts { get; set; }
+        public virtual ICollection<ContractProduct> ContractProducts { get; set; } = new HashSet<ContractProduct>();
     }
 }

@@ -1,7 +1,7 @@
 ﻿namespace API.Model
 {
-    public class Customer: BaseModel
+    public class Customer : BaseModel
     {
-        public IList<Contract>? Contracts { get; set; }
+        public virtual ICollection<Contract> Contracts { get; set; } = new HashSet<Contract>();
     }
 }

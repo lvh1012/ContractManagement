@@ -2,16 +2,16 @@
 
 namespace API.Repository.Interface
 {
-    public interface IBaseRepository<T>
+    public interface IBaseRepository<TModel>
     {
-        IQueryable<T> GetById(Guid id);
-        IQueryable<T> GetAll();
-        IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression);
-        Task Insert(T entity);
-        Task Update(T entity);
-        Task Delete(T entity);
-        Task InsertMultiple(IList<T> entity);
-        Task UpdateMultiple(IList<T> entity);
-        Task DeleteMultiple(IList<T> entity);
+        IQueryable<TModel> GetById(Guid id);
+        IQueryable<TModel> GetAll();
+        IQueryable<TModel> FindByCondition(Expression<Func<TModel, bool>> expression);
+        Task Insert(TModel entity);
+        Task Update(TModel entity);
+        Task Delete(TModel entity);
+        Task InsertMultiple(IList<TModel> entities);
+        Task UpdateMultiple(IList<TModel> entities);
+        Task DeleteMultiple(IList<TModel> entities);
     }
 }

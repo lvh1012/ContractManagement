@@ -6,8 +6,8 @@ namespace API.DataContext
     public class ApplicationDataContext : DbContext
     {
         // Chuỗi kết nối tới CSDL (MS SQL Server)
-        //private const string connectionString = @"Server= localhost; Database= DotNetPractice; Integrated Security=True;";
-        private const string connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;database=TestLocal;trusted_connection=yes;";
+        private const string connectionString = @"Server= localhost; Database= DotNetPractice; Integrated Security=True;";
+        //private const string connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;database=TestLocal;trusted_connection=yes;";
 
 
         public DbSet<Contract> Contracts { get; set; }

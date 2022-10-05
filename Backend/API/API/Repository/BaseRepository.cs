@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace API.Repository
 {
-    public abstract class BaseRepository<T> : IBaseRepository<T> where T : BaseModel
+    public abstract class BaseRepository<TModel> : IBaseRepository<TModel> where TModel : BaseModel
     {
         private readonly ApplicationDataContext _applicationDataContext;
 
@@ -15,7 +15,7 @@ namespace API.Repository
             _applicationDataContext = applicationDataContext;
         }
 
-        public async Task Insert(T entity)
+        public async Task Insert(TModel entity)
         {
             entity.CreatedOn = DateTime.Now;
             entity.CreatedBy = Guid.Empty;
@@ -23,7 +23,7 @@ namespace API.Repository
             await _applicationDataContext.SaveChangesAsync();
         }
 
-        public async Task InsertMultiple(IList<T> entities)
+        public async Task InsertMultiple(IList<TModel> entities)
         {
             foreach (var item in entities)
             {
@@ -34,13 +34,13 @@ namespace API.Repository
             await _applicationDataContext.SaveChangesAsync();
         }
 
-        public async Task Delete(T entity)
+        public async Task Delete(TModel entity)
         {
             entity.IsDeleted = true;
             await Update(entity);
         }
 
-        public async Task DeleteMultiple(IList<T> entities)
+        public async Task DeleteMultiple(IList<TModel> entities)
         {
             foreach (var item in entities)
             {
@@ -49,31 +49,31 @@ namespace API.Repository
             await UpdateMultiple(entities);
         }
 
-        public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression)
+        public IQueryable<TModel> FindByCondition(Expression<Func<TModel, bool>> expression)
         {
-            return _applicationDataContext.Set<T>().Where(expression).Where(r => !r.IsDeleted).AsNoTracking();
+            return _applicationDataContext.Set<TModel>().Where(expression).Where(r => !r.IsDeleted).AsNoTracking();
         }
 
-        public IQueryable<T> GetAll()
+        public IQueryable<TModel> GetAll()
         {
-            return _applicationDataContext.Set<T>().Where(r => !r.IsDeleted).AsNoTracking();
+            return _applicationDataContext.Set<TModel>().Where(r => !r.IsDeleted).AsNoTracking();
         }
 
-        public IQueryable<T> GetById(Guid id)
+        public IQueryable<TModel> GetById(Guid id)
         {
-            return _applicationDataContext.Set<T>().Where(r => r.Id == id).Where(r => !r.IsDeleted).AsNoTracking();
+            return _applicationDataContext.Set<TModel>().Where(r => r.Id == id).Where(r => !r.IsDeleted).AsNoTracking();
         }
 
-        public async Task Update(T entity)
+        public async Task Update(TModel entity)
         {
             entity.UpdatedOn = DateTime.Now;
             entity.UpdatedBy = Guid.Empty; // lay id nguoi update
             await _applicationDataContext.SaveChangesAsync();
         }
 
-        public async Task UpdateMultiple(IList<T> entities)
+        public async Task UpdateMultiple(IList<TModel> entities)
         {
-            foreach (T item in entities)
+            foreach (var item in entities)
             {
                 item.UpdatedOn = DateTime.Now;
                 item.UpdatedBy = Guid.Empty; // lay id nguoi update

@@ -4,8 +4,8 @@
     {
         public int Quantity { get; set; }
         public Guid ContractId { get; set; }
-        public Contract Contract { get; set; }
+        public virtual Contract? Contract { get; set; }
         public Guid ProductId { get; set; }
-        public Product Product { get; set; }
+        public virtual Product? Product { get; set; }
     }
 }

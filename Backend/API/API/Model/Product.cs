@@ -8,6 +8,6 @@ namespace API.Model
         public string? Size { get; set; }
         public int Price { get; set; }
         public string Unit { get; set; }
-        public virtual ICollection<ContractProduct> ContractProducts { get; set; } = new HashSet<ContractProduct>();
+        public ICollection<ContractProduct> ContractProducts { get; set; } = new HashSet<ContractProduct>();
     }
 }

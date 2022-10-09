@@ -1,0 +1,49 @@
+$text-color: #495057;
+$slidebar-width: 250px;
+
+:host {
+  .layout-wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .layout-slidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100vh;
+      background-color: #ffffff;
+      width: $slidebar-width;
+      display: flex;
+      flex-direction: column;
+      padding: 2rem;
+      overflow-y: auto;
+      flex-grow: 1;
+
+      a {
+        color: $text-color;
+        display: flex;
+        align-items: center;
+        padding: 1rem 0.75rem;
+        border-radius: 10px;
+        border-bottom: 1px solid #D5D8DC;
+        cursor: pointer;
+
+        &.active {
+          color: #36f;
+          background-color: #F4F6F6;
+        }
+      }
+    }
+
+    .layout-content {
+      height: 100vh;
+      margin-left: $slidebar-width;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      background-color: #F2F3F4;
+      padding: 2rem;
+    }
+  }
+}

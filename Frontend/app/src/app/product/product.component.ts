@@ -1,3 +1,4 @@
+import { ProductEnum } from './enum/product.enum';
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
@@ -11,55 +12,64 @@ import { ProductService } from './services/product.service';
 })
 export class ProductComponent implements OnInit {
 
-  productDialog: boolean = false;
+  openDialog: boolean = false;
 
   products: Product[] = [];
 
   product: Product = {};
 
-  selectedProducts: Product[] = [];
+  selectedRows: Product[] = [];
 
   submitted: boolean = false;
 
   statuses: any[] = [];
 
+  units: any[] = [
+    {
+      name: 'Cái',
+      code: ProductEnum.CAI
+    },
+    {
+      name: 'Chiếc',
+      code: ProductEnum.CHIEC
+    },
+    {
+      name: 'Bộ',
+      code: ProductEnum.BO
+    }
+  ];
+
   constructor(private productService: ProductService, private messageService: MessageService, private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
     this.productService.getProducts().then(data => this.products = data);
-
-    this.statuses = [
-      { label: 'INSTOCK', value: 'instock' },
-      { label: 'LOWSTOCK', value: 'lowstock' },
-      { label: 'OUTOFSTOCK', value: 'outofstock' }
-    ];
   }
 
   openNew() {
     this.product = {};
     this.submitted = false;
-    this.productDialog = true;
+    this.openDialog = true;
   }
 
-  deleteSelectedProducts() {
+  deleteSelected() {
     this.confirmationService.confirm({
-      message: 'Are you sure you want to delete the selected products?',
-      header: 'Confirm',
+      message: 'Bạn có chắn chắn muốn xóa những sản phẩm này không?',
+      header: 'Xác nhận',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.products = this.products.filter(val => !this.selectedProducts.includes(val));
-        this.selectedProducts = [];
+        this.products = this.products.filter(val => !this.selectedRows.includes(val));
+        this.selectedRows = [];
         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
       }
     });
   }
 
-  editProduct(product: Product) {
+  edit(product: Product) {
     this.product = { ...product };
-    this.productDialog = true;
+    this.openDialog = true;
   }
 
-  deleteProduct(product: Product) {
+  delete(product: Product) {
     this.confirmationService.confirm({
       message: 'Are you sure you want to delete ' + product.name + '?',
       header: 'Confirm',
@@ -73,11 +83,11 @@ export class ProductComponent implements OnInit {
   }
 
   hideDialog() {
-    this.productDialog = false;
+    this.openDialog = false;
     this.submitted = false;
   }
 
-  saveProduct() {
+  save() {
     this.submitted = true;
 
     if (this.product.name?.trim()) {
@@ -87,13 +97,12 @@ export class ProductComponent implements OnInit {
       }
       else {
         this.product.id = this.createId();
-        this.product.image = 'product-placeholder.svg';
         this.products.push(this.product);
         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
       }
 
       this.products = [...this.products];
-      this.productDialog = false;
+      this.openDialog = false;
       this.product = {};
     }
   }

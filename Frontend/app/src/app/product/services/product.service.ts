@@ -70,13 +70,8 @@ export class ProductService {
       name: this.generateName(),
       description: "Product Description",
       price: this.generatePrice(),
-      quantity: this.generateQuantity(),
-      category: "Product Category",
-      inventoryStatus: this.generateStatus(),
-      rating: this.generateRating()
     };
 
-    product.image = product.name?.toLocaleLowerCase().split(/[ ,]+/).join('-') + ".jpg";;
     return product;
   }
 

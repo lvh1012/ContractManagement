@@ -15,7 +15,7 @@
     </ng-template>
   </p-toolbar>
 
-  <p-table #dt [value]="products" [rows]="10" [paginator]="true"
+  <p-table #dt [scrollable]="true" scrollHeight="400px" [value]="products" [rows]="10" [paginator]="true"
     [globalFilterFields]="['name','country.name','representative.name','status']" responsiveLayout="scroll"
     [(selection)]="selectedProducts" [rowHover]="true" dataKey="id"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
@@ -30,26 +30,27 @@
     </ng-template>
     <ng-template pTemplate="header">
       <tr>
-        <th style="width: 3rem">
+        <th style="max-width:3rem">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
-        <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon>
+        <th style="min-width:200px" pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon>
         </th>
-        <th>Image</th>
-        <th pSortableColumn="price">Price <p-sortIcon field="price"></p-sortIcon>
+        <th style="min-width:200px">Image</th>
+        <th style="min-width:200px" pSortableColumn="price">Price <p-sortIcon field="price"></p-sortIcon>
         </th>
-        <th pSortableColumn="category">Category <p-sortIcon field="category"></p-sortIcon>
+        <th style="min-width:200px" pSortableColumn="category">Category <p-sortIcon field="category"></p-sortIcon>
         </th>
-        <th pSortableColumn="rating">Reviews <p-sortIcon field="rating"></p-sortIcon>
+        <th style="min-width:200px" pSortableColumn="rating">Reviews <p-sortIcon field="rating"></p-sortIcon>
         </th>
-        <th pSortableColumn="inventoryStatus">Status <p-sortIcon field="inventoryStatus"></p-sortIcon>
+        <th style="min-width:200px" pSortableColumn="inventoryStatus">Status <p-sortIcon field="inventoryStatus">
+          </p-sortIcon>
         </th>
-        <th></th>
+        <th style="min-width:200px"></th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-product>
       <tr>
-        <td>
+        <td style="max-width:3rem">
           <p-tableCheckbox [value]="product"></p-tableCheckbox>
         </td>
         <td>{{product.name}}</td>

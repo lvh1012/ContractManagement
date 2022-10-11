@@ -16,52 +16,55 @@
     </ng-template> -->
   </p-toolbar>
 
-  <p-table #dt [scrollable]="true" scrollHeight="400px" [value]="products" [rows]="10" [paginator]="true"
-    [globalFilterFields]="['name']" responsiveLayout="scroll" [(selection)]="selectedRows" [rowHover]="true"
-    dataKey="id" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-    [showCurrentPageReport]="true">
-    <ng-template pTemplate="caption">
-      <div class="flex align-items-center justify-content-between">
-        <h5 class="m-0">Danh sách sản phẩm</h5>
-        <span class="p-input-icon-left">
-          <i class="pi pi-search"></i>
-          <input pInputText type="text" placeholder="Tìm kiếm..." />
-        </span>
-      </div>
-    </ng-template>
-    <ng-template pTemplate="header">
-      <tr>
-        <th style="max-width:3rem">
-          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-        </th>
-        <th style="min-width:200px" pSortableColumn="name">Tên sản phẩm <p-sortIcon field="name"></p-sortIcon>
-        </th>
-        <th style="max-width:200px" pSortableColumn="price">Giá <p-sortIcon field="price"></p-sortIcon>
-        </th>
-        <th style="max-width:120px">Chức năng</th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-product>
-      <tr>
-        <td style="max-width:3rem">
-          <p-tableCheckbox [value]="product"></p-tableCheckbox>
-        </td>
-        <td>{{product.name}}</td>
-        <td style="max-width:200px">{{product.price | currency:'VND'}}</td>
-        <td style="max-width:120px">
-          <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
-            (click)="edit(product)"></button>
-          <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
-            (click)="delete(product)"></button>
-        </td>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="summary">
-      <div class="flex align-items-center justify-content-between">
-        In total there are {{products ? products.length : 0 }} products.
-      </div>
-    </ng-template>
-  </p-table>
+  <div class="table-container">
+    <p-table #dt [scrollable]="true" [value]="products" [rows]="10" [paginator]="true" [globalFilterFields]="['name']"
+      responsiveLayout="scroll" [(selection)]="selectedRows" [rowHover]="true" dataKey="id" scrollHeight="flex"
+      currentPageReportTemplate="{first} - {last} trong {totalRecords}" [showCurrentPageReport]="true"
+      [rowsPerPageOptions]="[10,25,50]">
+      <ng-template pTemplate=" caption">
+        <div class="flex align-items-center justify-content-between">
+          <h5 class="m-0">Danh sách sản phẩm</h5>
+          <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" placeholder="Tìm kiếm..." />
+          </span>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="max-width:3rem">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th style="min-width:200px" pSortableColumn="name">Tên sản phẩm <p-sortIcon field="name"></p-sortIcon>
+          </th>
+          <th style="max-width:200px" pSortableColumn="price">Giá <p-sortIcon field="price"></p-sortIcon>
+          </th>
+          <th style="max-width:120px">Chức năng</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-product>
+        <tr>
+          <td style="max-width:3rem">
+            <p-tableCheckbox [value]="product"></p-tableCheckbox>
+          </td>
+          <td>{{product.name}}</td>
+          <td style="max-width:200px">{{product.price | currency:'VND'}}</td>
+          <td style="max-width:120px">
+            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
+              (click)="edit(product)"></button>
+            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+              (click)="delete(product)"></button>
+          </td>
+        </tr>
+      </ng-template>
+      <!-- <ng-template pTemplate="summary">
+        <div class="flex align-items-center justify-content-between">
+          In total there are {{products ? products.length : 0 }} products.
+        </div>
+      </ng-template> -->
+    </p-table>
+  </div>
+
 </div>
 
 <p-dialog [(visible)]="openDialog" [style]="{width: '750px'}" header="Chi tiết sản phẩm" [modal]="true"

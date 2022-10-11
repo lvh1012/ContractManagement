@@ -1,4 +1,16 @@
 :host ::ng-deep {
+  height: calc(100vh - 4rem);
+  overflow-y: auto;
+
+  .table-container {
+    height: calc(100vh - 10.5rem);
+
+    .p-datatable-wrapper {
+      flex: unset;
+      height: unset;
+    }
+  }
+
   .p-paginator {
     .p-paginator-current {
       margin-left: auto;

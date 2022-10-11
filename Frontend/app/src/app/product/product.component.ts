@@ -55,6 +55,8 @@ export class ProductComponent implements OnInit {
     this.confirmationService.confirm({
       message: 'Bạn có chắn chắn muốn xóa những sản phẩm này không?',
       header: 'Xác nhận',
+      acceptLabel: 'Có',
+      rejectLabel: 'Không',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.products = this.products.filter(val => !this.selectedRows.includes(val));
@@ -71,9 +73,11 @@ export class ProductComponent implements OnInit {
 
   delete(product: Product) {
     this.confirmationService.confirm({
-      message: 'Are you sure you want to delete ' + product.name + '?',
-      header: 'Confirm',
+      message: 'Bạn có chắn chắn muốn xóa ' + product.name + '?',
+      header: 'Xác nhận',
       icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Có',
+      rejectLabel: 'Không',
       accept: () => {
         this.products = this.products.filter(val => val.id !== product.id);
         this.product = {};

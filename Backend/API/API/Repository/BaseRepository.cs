@@ -15,12 +15,13 @@ namespace API.Repository
             _applicationDataContext = applicationDataContext;
         }
 
-        public async Task Insert(TModel entity)
+        public async Task<TModel> Insert(TModel entity)
         {
             entity.CreatedOn = DateTime.Now;
             entity.CreatedBy = Guid.Empty;
             await _applicationDataContext.AddAsync(entity);
             await _applicationDataContext.SaveChangesAsync();
+            return entity;
         }
 
         public async Task InsertMultiple(IList<TModel> entities)
@@ -64,11 +65,12 @@ namespace API.Repository
             return _applicationDataContext.Set<TModel>().Where(r => r.Id == id).Where(r => !r.IsDeleted).AsNoTracking();
         }
 
-        public async Task Update(TModel entity)
+        public async Task<TModel> Update(TModel entity)
         {
             entity.UpdatedOn = DateTime.Now;
             entity.UpdatedBy = Guid.Empty; // lay id nguoi update
             await _applicationDataContext.SaveChangesAsync();
+            return entity;
         }
 
         public async Task UpdateMultiple(IList<TModel> entities)

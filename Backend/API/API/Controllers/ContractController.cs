@@ -12,10 +12,7 @@ using API.Repository.Interface;
 
 namespace API.Controllers
 {
-    public class ContractController : BaseController<IContractRepository, Contract>
+    public class ContractController
     {
-        public ContractController(IContractRepository repository) : base(repository)
-        {
-        }
     }
 }

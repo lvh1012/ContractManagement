@@ -1,6 +1,8 @@
 using API.DataContext;
 using API.Repository;
 using API.Repository.Interface;
+using API.Services;
+using API.Services.Interface;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +21,9 @@ builder.Services.AddScoped<IContractRepository, ContractRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IContractProductRepository, ContractProductRepository>();
+
+// DI Service
+builder.Services.AddScoped<IProductService, ProductService>();
 
 
 var app = builder.Build();

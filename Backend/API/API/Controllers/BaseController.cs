@@ -8,65 +8,61 @@ using Microsoft.EntityFrameworkCore;
 using API.DataContext;
 using API.Model;
 using API.Repository.Interface;
+using API.Services.Interface;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BaseController<TRepository, TModel> : ControllerBase
-        where TRepository : IBaseRepository<TModel>
+    public class BaseController<TService, TModel> : ControllerBase
+        where TService : IBaseService<TModel>
         where TModel : BaseModel
     {
-        protected readonly IBaseRepository<TModel> _repository;
+        protected readonly IBaseService<TModel> _service;
 
-        public BaseController(IBaseRepository<TModel> repository)
+        public BaseController(IBaseService<TModel> service)
         {
-            _repository = repository;
+            _service = service;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TModel>>> GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var query = _repository.GetAll();
-            return await _repository.GetAll().ToListAsync();
+            var result = await _service.GetAll();
+            return ResponseResult(result);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<TModel>> GetById(Guid id)
+        public async Task<IActionResult> GetById(Guid id)
         {
-            return await _repository.GetById(id).FirstOrDefaultAsync();
+            var result = await _service.GetById(id);
+            return ResponseResult(result);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, TModel model)
         {
-            if (id != model.Id)
-            {
-                return BadRequest();
-            }
-
-            await _repository.Update(model);
-            return Ok();
+            var result = await _service.Update(id, model);
+            return ResponseResult(result);
         }
 
         [HttpPost]
-        public async Task<ActionResult<TModel>> Create(TModel model)
+        public async Task<IActionResult> Insert(TModel model)
         {
-            await _repository.Insert(model);
-            return model;
+            var result = await _service.Insert(model);
+            return ResponseResult(result);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var model = await _repository.GetById(id).FirstOrDefaultAsync();
-            if (model == null)
-            {
-                return NotFound();
-            }
+            var result = await _service.Delete(id);
+            return ResponseResult(result);
+        }
 
-            await _repository.Delete(model);
-            return Ok();
+        public IActionResult ResponseResult<T>(BaseResult<T> result)
+        {
+            return Ok(result);
         }
     }
 }

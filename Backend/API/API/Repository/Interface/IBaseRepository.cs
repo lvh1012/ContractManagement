@@ -7,8 +7,8 @@ namespace API.Repository.Interface
         IQueryable<TModel> GetById(Guid id);
         IQueryable<TModel> GetAll();
         IQueryable<TModel> FindByCondition(Expression<Func<TModel, bool>> expression);
-        Task Insert(TModel entity);
-        Task Update(TModel entity);
+        Task<TModel> Insert(TModel entity);
+        Task<TModel> Update(TModel entity);
         Task Delete(TModel entity);
         Task InsertMultiple(IList<TModel> entities);
         Task UpdateMultiple(IList<TModel> entities);

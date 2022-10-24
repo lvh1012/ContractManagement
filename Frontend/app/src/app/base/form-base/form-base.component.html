@@ -1,16 +1,25 @@
-<div>
-  <form (ngSubmit)="onSubmit()" [formGroup]="form">
+<form (ngSubmit)="onSubmit()" [formGroup]="form">
+  <div class="formgrid grid">
+    <ng-template ngFor [ngForOf]="fields" let-field>
+      <div class="field" [class]="'col-' + field.width">
+        <label [attr.for]="field.key" class="block">{{field.label}}</label>
+        <ng-container [ngSwitch]="field.controlType">
+          <input *ngSwitchCase="'InputText'" [id]="field.key" [type]="field.type" [formControlName]="field.key"
+            [attr.aria-describedby]="field.key + '-help'" class="w-full" [class.ng-invalid]="true"
+            [class.ng-dirty]="true" pInputText />
 
-    <div *ngFor="let question of questions" class="form-row">
-      <app-question [question]="question" [form]="form"></app-question>
+
+        </ng-container>
+
+        <small [id]="field.key + '-help'" class="p-error block">{{field.label}} is not available.</small>
+      </div>
+    </ng-template>
+
+    <div class="field col-12">
+      <button pButton type="submit" label="Submit"></button>
     </div>
-
-    <div class="form-row">
-      <button type="submit" [disabled]="!form.valid">Save</button>
+    <div class="field col-12">
+      <button pButton type="button" label="Test Update" (click)="update()"></button>
     </div>
-  </form>
-
-  <div *ngIf="payLoad" class="form-row">
-    <strong>Saved the following values</strong><br>{{payLoad}}
   </div>
-</div>
+</form>

@@ -1,3 +1,4 @@
+import { TestComponent } from './test/test.component';
 import { ContractComponent } from './contract/contract.component';
 import { CustomerComponent } from './customer/customer.component';
 import { ProductComponent } from './product/product.component';
@@ -8,7 +9,8 @@ const routes: Routes = [
   { path: '', redirectTo: 'contract', pathMatch: 'full' },
   { path: 'product', component: ProductComponent },
   { path: 'customer', component: CustomerComponent },
-  { path: 'contract', component: ContractComponent }
+  { path: 'contract', component: ContractComponent },
+  { path: 'test', component: TestComponent }
 ];
 
 @NgModule({

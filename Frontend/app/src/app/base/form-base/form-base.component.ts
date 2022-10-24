@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { FormBase } from './models/form-base';
+import { BaseField } from './models/base-field';
 
 @Component({
   selector: 'app-form-base',
@@ -9,32 +9,44 @@ import { FormBase } from './models/form-base';
 })
 export class FormBaseComponent implements OnInit {
 
-  questions: FormBase<string>[] | null = [];
+  fields: BaseField[] = [
+    new BaseField({
+      key: 'firstName',
+      label: 'First name',
+      value: 'Bombasto',
+      controlType: 'InputText',
+      required: true,
+      order: 1
+    })
+  ];
   form!: FormGroup;
   payLoad = '';
 
   constructor() { }
 
   ngOnInit() {
-    this.form = this.toFormGroup(this.questions as FormBase<string>[]);
+    this.form = this.toFormGroup(this.fields as BaseField[]);
   }
 
   onSubmit() {
     this.payLoad = JSON.stringify(this.form.getRawValue());
   }
 
-  // get isValid() { return this.form.controls[this.question.key].valid; }
 
 
-  toFormGroup(questions: FormBase<string>[]) {
+  toFormGroup(fields: BaseField[]) {
     const group: any = {};
 
-    questions.forEach(question => {
-      group[question.key] = question.required ? new FormControl(question.value || '', Validators.required)
-        : new FormControl(question.value || '');
+    fields.forEach(field => {
+      group[field.key] = field.required ? new FormControl(field.value || '', Validators.required)
+        : new FormControl(field.value || '');
     });
     return new FormGroup(group);
   }
 
-
+  update() {
+    this.form.patchValue({
+      firstName: 'Nancy'
+    });
+  }
 }

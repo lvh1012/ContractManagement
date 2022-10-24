@@ -34,7 +34,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { FormBaseComponent } from './base/form-base/form-base.component';
-import { FieldBaseComponent } from './base/form-base/field-base/field-base.component';
+import { TestComponent } from './test/test.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +44,8 @@ import { FieldBaseComponent } from './base/form-base/field-base/field-base.compo
     ContractComponent,
     LayoutComponent,
     FormBaseComponent,
-    FieldBaseComponent
+    TestComponent,
+    FormBaseComponent
   ],
   imports: [
     BrowserModule,

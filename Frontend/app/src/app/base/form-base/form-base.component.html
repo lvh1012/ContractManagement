@@ -1,25 +1,61 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="form">
   <div class="formgrid grid">
-    <ng-template ngFor [ngForOf]="fields" let-field>
-      <div class="field" [class]="'col-' + field.width">
-        <label [attr.for]="field.key" class="block">{{field.label}}</label>
-        <ng-container [ngSwitch]="field.controlType">
-          <input *ngSwitchCase="'InputText'" [id]="field.key" [type]="field.type" [formControlName]="field.key"
-            [attr.aria-describedby]="field.key + '-help'" class="w-full" [class.ng-invalid]="true"
+    <ng-template ngFor [ngForOf]="fields" let-control>
+      <div class="field" [class]="'col-' + control.width">
+        <label [attr.for]="control.key" class="block">{{control.label}}</label>
+        <ng-container [ngSwitch]="control.controlType">
+          <input *ngSwitchCase="'InputText'" [id]="control.key" [type]="control.type" [formControlName]="control.key"
+            [attr.aria-describedby]="control.key + '-help'" class="w-full" [class.ng-invalid]="true"
             [class.ng-dirty]="true" pInputText />
 
+          <ng-container *ngSwitchCase="'DatePicker'">
+            <p-calendar [inputId]="control.key" [formControlName]="control.key" [inline]="control.inline"
+              [dateFormat]="control.dateFormat" [showTime]="control.showTime" [hourFormat]="control.hourFormat"
+              [minDate]="control.minDate" [maxDate]="control.maxDate" [disabledDates]="control.disabledDates"
+              [disabledDays]="control.disabledDays" [showButtonBar]="control.showButtonBar" [view]="control.view"
+              [selectionMode]="control.selectionMode" [required]="control.required" [disabled]="control.disabled"
+              [attr.aria-describedby]="control.key + '-help'" [styleClass]="'w-full'" [class.ng-invalid]="true"
+              [class.ng-dirty]="true"></p-calendar>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'Checkbox'">
+            <div class="field-checkbox" *ngFor="let data of control.dataSource; index as idx">
+              <p-checkbox [formControl]="form.controls[control.key]" [value]="data.value" [binary]="control.binary"
+                [required]="control.required" [disabled]="control.disabled" [inputId]="'checkbox-' + control.key + idx">
+              </p-checkbox>
+              <label [attr.for]="'checkbox-' + control.key + idx">{{data.label}}</label>
+            </div>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'Dropdown'">
+            <p-dropdown [options]="control.dataSource" [optionLabel]="control.optionLabel"
+              [optionValue]="control.optionValue" [inputId]="control.key" [required]="control.required"
+              [disabled]="control.disabled" [showClear]="control.showClear" [styleClass]="'w-full'"
+              [appendTo]="control.appendTo">
+            </p-dropdown>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'Editor'">
+            <p-editor [formControlName]="control.key" [style]="control.style" [required]="control.required"
+              [disabled]="control.disabled"></p-editor>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'InputMark'">
+            <p-inputMask [formControlName]="control.key" [mask]="control.mask" [slotChar]="control.slotChar"
+              [showClear]="control.showClear" [styleClass]="'w-full'" [characterPattern]="control.characterPattern"
+              [required]="control.required" [disabled]="control.disabled">
+            </p-inputMask>
+          </ng-container>
 
         </ng-container>
 
-        <small [id]="field.key + '-help'" class="p-error block">{{field.label}} is not available.</small>
+        <small [id]="control.key + '-help'" class="p-error block">{{control.label}} is not available.</small>
       </div>
     </ng-template>
 
     <div class="field col-12">
       <button pButton type="submit" label="Submit"></button>
-    </div>
-    <div class="field col-12">
-      <button pButton type="button" label="Test Update" (click)="update()"></button>
+      {{payLoad}}
     </div>
   </div>
 </form>

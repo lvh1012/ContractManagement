@@ -14,7 +14,7 @@ namespace API.Controllers
 {
     public class ProductController : BaseController<IProductService, Product>
     {
-        public ProductController(IBaseService<Product> service) : base(service)
+        public ProductController(IProductService service) : base(service)
         {
         }
     }

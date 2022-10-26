@@ -6,7 +6,7 @@ namespace API.Services
 {
     public class ProductService : BaseService<IProductRepository, Product>, IProductService
     {
-        public ProductService(IBaseRepository<Product> repository) : base(repository)
+        public ProductService(IProductRepository repository) : base(repository)
         {
         }
     }

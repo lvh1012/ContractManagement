@@ -25,13 +25,7 @@ namespace API.Services
 
         public async Task<BaseResult<bool>> Delete(Guid id)
         {
-            var model = await _repository.GetById(id).FirstOrDefaultAsync();
-            if (model == null)
-            {
-                throw new Exception("test");
-            }
-
-            await _repository.Delete(model);
+            await _repository.Delete(id);
             return BaseResult<bool>.ReturnWithData(true);
         }
 
@@ -49,14 +43,14 @@ namespace API.Services
 
         public async Task<BaseResult<TModel>> Update(Guid id, TModel model)
         {
-            var modelExist = await _repository.GetById(id).FirstOrDefaultAsync();
-            if (modelExist == null)
+            var modelExist = await _repository.CheckExist(id);
+            if (modelExist)
             {
-                throw new Exception("test");
+                var data = await _repository.Update(model);
+                return BaseResult<TModel>.ReturnWithData(data);
             }
+            return BaseResult<TModel>.ReturnWithData(model);
 
-            var data = await _repository.Update(model);
-            return BaseResult<TModel>.ReturnWithData(data);
         }
     }
 }

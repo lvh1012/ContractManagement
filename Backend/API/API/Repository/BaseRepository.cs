@@ -2,6 +2,7 @@
 using API.Model;
 using API.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace API.Repository
@@ -17,8 +18,12 @@ namespace API.Repository
 
         public async Task<TModel> Insert(TModel entity)
         {
-            entity.CreatedOn = DateTime.Now;
+            entity.Id = Guid.NewGuid();
+            var now = DateTime.Now;
+            entity.CreatedOn = now;
             entity.CreatedBy = Guid.Empty;
+            entity.UpdatedOn = now;
+            entity.UpdatedBy = Guid.Empty;
             await _applicationDataContext.AddAsync(entity);
             await _applicationDataContext.SaveChangesAsync();
             return entity;
@@ -26,10 +31,14 @@ namespace API.Repository
 
         public async Task InsertMultiple(IList<TModel> entities)
         {
+            var now = DateTime.Now;
             foreach (var item in entities)
             {
-                item.CreatedOn = DateTime.Now;
+                item.Id = Guid.NewGuid();
+                item.CreatedOn = now;
                 item.CreatedBy = Guid.Empty;
+                item.UpdatedOn = now;
+                item.UpdatedBy = Guid.Empty;
             }
             await _applicationDataContext.AddRangeAsync(entities);
             await _applicationDataContext.SaveChangesAsync();
@@ -67,20 +76,47 @@ namespace API.Repository
 
         public async Task<TModel> Update(TModel entity)
         {
+            _applicationDataContext.Set<TModel>().Attach(entity);
+            _applicationDataContext.Entry(entity).State = EntityState.Modified;
+
             entity.UpdatedOn = DateTime.Now;
             entity.UpdatedBy = Guid.Empty; // lay id nguoi update
+
             await _applicationDataContext.SaveChangesAsync();
             return entity;
         }
 
         public async Task UpdateMultiple(IList<TModel> entities)
         {
+            _applicationDataContext.Set<TModel>().AttachRange(entities);
+            _applicationDataContext.Entry(entities).State = EntityState.Modified;
+
+            var now = DateTime.Now;
             foreach (var item in entities)
             {
-                item.UpdatedOn = DateTime.Now;
+                item.UpdatedOn = now;
                 item.UpdatedBy = Guid.Empty; // lay id nguoi update
             }
             await _applicationDataContext.SaveChangesAsync();
+        }
+
+        public async Task Delete(Guid id)
+        {
+            var entity = await GetById(id).FirstOrDefaultAsync();
+            if (entity != null)
+            {
+                await Delete(entity);
+            }
+        }
+
+        public async Task<bool> CheckExist(Guid id)
+        {
+            var entity = await GetById(id).FirstOrDefaultAsync();
+            if (entity != null)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

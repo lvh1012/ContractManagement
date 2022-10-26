@@ -18,9 +18,9 @@ namespace API.Controllers
         where TService : IBaseService<TModel>
         where TModel : BaseModel
     {
-        protected readonly IBaseService<TModel> _service;
+        protected readonly TService _service;
 
-        public BaseController(IBaseService<TModel> service)
+        public BaseController(TService service)
         {
             _service = service;
         }

@@ -4,9 +4,9 @@ namespace API.Repository.Interface
 {
     public interface IBaseRepository<TModel>
     {
-        IQueryable<TModel> GetById(Guid id);
+        Task<TModel> GetById(Guid id);
         IQueryable<TModel> GetAll();
-        IQueryable<TModel> FindByCondition(Expression<Func<TModel, bool>> expression);
+        IQueryable<TModel> GetByCondition(Expression<Func<TModel, bool>> expression);
         Task<TModel> Insert(TModel entity);
         Task<TModel> Update(TModel entity);
         Task Delete(TModel entity);

@@ -59,7 +59,7 @@ namespace API.Repository
             await UpdateMultiple(entities);
         }
 
-        public IQueryable<TModel> FindByCondition(Expression<Func<TModel, bool>> expression)
+        public IQueryable<TModel> GetByCondition(Expression<Func<TModel, bool>> expression)
         {
             return _applicationDataContext.Set<TModel>().Where(expression).Where(r => !r.IsDeleted).AsNoTracking();
         }
@@ -69,9 +69,9 @@ namespace API.Repository
             return _applicationDataContext.Set<TModel>().Where(r => !r.IsDeleted).AsNoTracking();
         }
 
-        public IQueryable<TModel> GetById(Guid id)
+        public async Task<TModel> GetById(Guid id)
         {
-            return _applicationDataContext.Set<TModel>().Where(r => r.Id == id).Where(r => !r.IsDeleted).AsNoTracking();
+            return await _applicationDataContext.Set<TModel>().Where(r => r.Id == id).Where(r => !r.IsDeleted).AsNoTracking().FirstOrDefaultAsync();
         }
 
         public async Task<TModel> Update(TModel entity)
@@ -102,7 +102,7 @@ namespace API.Repository
 
         public async Task Delete(Guid id)
         {
-            var entity = await GetById(id).FirstOrDefaultAsync();
+            var entity = await GetById(id);
             if (entity != null)
             {
                 await Delete(entity);
@@ -111,7 +111,7 @@ namespace API.Repository
 
         public async Task<bool> CheckExist(Guid id)
         {
-            var entity = await GetById(id).FirstOrDefaultAsync();
+            var entity = await GetById(id);
             if (entity != null)
             {
                 return true;

@@ -37,7 +37,7 @@ namespace API.Services
 
         public async Task<BaseResult<TModel>> GetById(Guid id)
         {
-            var data = await _repository.GetById(id).FirstOrDefaultAsync();
+            var data = await _repository.GetById(id);
             return BaseResult<TModel>.ReturnWithData(data);
         }
 

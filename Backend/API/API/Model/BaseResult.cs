@@ -9,8 +9,9 @@
         public string? ErrorInFile { get; set; }
         public string? ErrorMessage { get; set; }
         public Exception? Exception { get; set; }
+        public Page? Page { get; set; }
 
-        public BaseResult(bool success, int status, TModel data, string? message, string? errorInFile, string? errorMessage, Exception? exception)
+        public BaseResult(bool success, int status, TModel data, string? message, string? errorInFile, string? errorMessage, Exception? exception, Page? page)
         {
             Success = success;
             Status = status;
@@ -19,6 +20,7 @@
             ErrorInFile = errorInFile;
             ErrorMessage = errorMessage;
             Exception = exception;
+            Page = page;
         }
 
         public BaseResult(bool success, int status, TModel data)

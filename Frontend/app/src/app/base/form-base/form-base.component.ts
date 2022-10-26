@@ -1,6 +1,9 @@
+import { CustomControl } from './models/custom-control';
+import { InputTextControl } from './models/inputtext-control';
+import { DatePickerControl } from './models/datepicker-control';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { BaseField } from './models/base-field';
+import { EditorControl } from './models/editor-control';
 
 @Component({
   selector: 'app-form-base',
@@ -9,14 +12,12 @@ import { BaseField } from './models/base-field';
 })
 export class FormBaseComponent implements OnInit {
 
-  fields: BaseField[] = [
-    new BaseField({
+  controls: any[] = [
+    new CustomControl({
       key: 'firstName',
       label: 'First name',
-      value: 'Bombasto',
-      controlType: 'InputText',
-      required: true,
-      order: 1
+      value: '',
+      required: true
     })
   ];
   form!: FormGroup;
@@ -25,7 +26,7 @@ export class FormBaseComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.form = this.toFormGroup(this.fields as BaseField[]);
+    this.form = this.toFormGroup(this.controls as any[]);
   }
 
   onSubmit() {
@@ -34,19 +35,13 @@ export class FormBaseComponent implements OnInit {
 
 
 
-  toFormGroup(fields: BaseField[]) {
+  toFormGroup(controls: any[]) {
     const group: any = {};
 
-    fields.forEach(field => {
+    controls.forEach(field => {
       group[field.key] = field.required ? new FormControl(field.value || '', Validators.required)
         : new FormControl(field.value || '');
     });
     return new FormGroup(group);
-  }
-
-  update() {
-    this.form.patchValue({
-      firstName: 'Nancy'
-    });
   }
 }

@@ -1,12 +1,12 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="form">
   <div class="formgrid grid">
-    <ng-template ngFor [ngForOf]="fields" let-control>
+    <ng-template ngFor [ngForOf]="controls" let-control>
       <div class="field" [class]="'col-' + control.width">
         <label [attr.for]="control.key" class="block">{{control.label}}</label>
         <ng-container [ngSwitch]="control.controlType">
           <input *ngSwitchCase="'InputText'" [id]="control.key" [type]="control.type" [formControlName]="control.key"
             [attr.aria-describedby]="control.key + '-help'" class="w-full" [class.ng-invalid]="true"
-            [class.ng-dirty]="true" pInputText />
+            [class.ng-dirty]="true" pInputText [required]="control.required" [disabled]="control.disabled" />
 
           <ng-container *ngSwitchCase="'DatePicker'">
             <p-calendar [inputId]="control.key" [formControlName]="control.key" [inline]="control.inline"
@@ -20,10 +20,11 @@
 
           <ng-container *ngSwitchCase="'Checkbox'">
             <div class="field-checkbox" *ngFor="let data of control.dataSource; index as idx">
-              <p-checkbox [formControl]="form.controls[control.key]" [value]="data.value" [binary]="control.binary"
-                [required]="control.required" [disabled]="control.disabled" [inputId]="'checkbox-' + control.key + idx">
+              <p-checkbox [formControl]="form.controls[control.key]" [value]="data[control.optionValue]"
+                [binary]="control.binary" [required]="control.required" [disabled]="control.disabled"
+                [inputId]="'checkbox-' + control.key + idx">
               </p-checkbox>
-              <label [attr.for]="'checkbox-' + control.key + idx">{{data.label}}</label>
+              <label [attr.for]="'checkbox-' + control.key + idx">{{data[control.optionLabel]}}</label>
             </div>
           </ng-container>
 
@@ -47,9 +48,55 @@
             </p-inputMask>
           </ng-container>
 
+          <ng-container *ngSwitchCase="'InputSwitch'">
+            <p-inputSwitch [formControlName]="control.key" [required]="control.required" [disabled]="control.disabled">
+            </p-inputSwitch>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'InputTextarea'">
+            <textarea [formControlName]="control.key" [required]="control.required" [disabled]="control.disabled"
+              [rows]="control.rows" [cols]="control.cols" pInputTextarea [autoResize]="control.autoResize"></textarea>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'InputNumber'">
+            <p-inputNumber [formControlName]="control.key" [required]="control.required" [disabled]="control.disabled"
+              [useGrouping]="control.useGrouping" [minFractionDigits]="control.minFractionDigits"
+              [maxFractionDigits]="control.maxFractionDigits" [min]="control.min" [max]="control.max"
+              [mode]="control.mode" [currency]="control.currency" [currencyDisplay]="control.currencyDisplay"
+              [locale]="control.locale" [prefix]="control.prefix" [suffix]="control.suffix" [step]="control.step"
+              [showButtons]="control.showButtons" [buttonLayout]="control.buttonLayout"
+              [decrementButtonClass]="control.decrementButtonClass"
+              [incrementButtonClass]="control.incrementButtonClass" [incrementButtonIcon]="control.incrementButtonIcon"
+              [decrementButtonIcon]="control.decrementButtonIcon">
+            </p-inputNumber>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'RadioButton'">
+            <p-radioButton *ngFor="let data of control.dataSource; index as idx" [name]="control.key"
+              [value]="data[control.optionValue]" [label]="data[control.optionLabel]" [formControlName]="control.key">
+            </p-radioButton>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'Slider'">
+            <p-slider [formControlName]="control.key" [required]="control.required" [disabled]="control.disabled"
+              [min]="control.min" [max]="control.max" [step]="control.step" [range]="control.range"
+              [orientation]="control.orientation"></p-slider>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'Custom'">
+            <ng-container [ngTemplateOutlet]="control.key || default">
+
+            </ng-container>
+          </ng-container>
+
+          <ng-template #default>
+          </ng-template>
+
+
         </ng-container>
 
-        <small [id]="control.key + '-help'" class="p-error block">{{control.label}} is not available.</small>
+        <small [id]="control.key + '-help'" class="block" [class.p-error]="true">{{control.label}} is not
+          available.</small>
       </div>
     </ng-template>
 

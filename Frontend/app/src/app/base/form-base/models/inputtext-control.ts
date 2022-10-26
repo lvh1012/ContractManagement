@@ -1,11 +1,9 @@
 import { Validators } from '@angular/forms';
 import { BaseControl } from './base-control';
 
-export class DropdownControl extends BaseControl {
-  override controlType = 'Dropdown';
-  dataSource?: Array<any>;
-  optionLabel?: string;
-  optionValue?: string;
+export class InputTextControl extends BaseControl {
+  override controlType = 'InputText';
+  style?: any;
 
   constructor(options: {
     key: string;
@@ -21,13 +19,9 @@ export class DropdownControl extends BaseControl {
     appendTo?: string;
     showClear?: boolean;
     validators?: Validators[];
-    dataSource?: Array<any>;
-    optionLabel?: string;
-    optionValue?: string;
+    style?: any;
   }) {
     super(options);
-    this.dataSource = options.dataSource;
-    this.optionLabel = options.optionLabel || 'label';
-    this.optionValue = options.optionValue || 'value';
+    this.style = options.style;
   }
 }

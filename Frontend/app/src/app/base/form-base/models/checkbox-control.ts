@@ -4,6 +4,8 @@ import { BaseControl } from './base-control';
 export class CheckboxControl extends BaseControl {
   override controlType = 'Checkbox';
   dataSource?: Array<any>;
+  optionLabel?: string;
+  optionValue?: string;
   binary?: boolean;
   checkboxIcon?: boolean;
 
@@ -21,6 +23,8 @@ export class CheckboxControl extends BaseControl {
     showClear?: boolean;
     validators?: Validators[];
     dataSource?: Array<any>;
+    optionLabel?: string;
+    optionValue?: string;
     binary?: boolean;
     checkboxIcon?: boolean;
   }) {
@@ -28,5 +32,7 @@ export class CheckboxControl extends BaseControl {
     this.dataSource = options.dataSource;
     this.binary = !!options.binary || false;
     this.checkboxIcon = !!options.checkboxIcon || false;
+    this.optionLabel = options.optionLabel || 'label';
+    this.optionValue = options.optionValue || 'value';
   }
 }

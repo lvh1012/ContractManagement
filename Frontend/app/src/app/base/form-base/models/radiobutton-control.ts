@@ -1,8 +1,8 @@
 import { Validators } from '@angular/forms';
 import { BaseControl } from './base-control';
 
-export class DropdownControl extends BaseControl {
-  override controlType = 'Dropdown';
+export class RadioButtonControl extends BaseControl {
+  override controlType = 'RadioButton';
   dataSource?: Array<any>;
   optionLabel?: string;
   optionValue?: string;

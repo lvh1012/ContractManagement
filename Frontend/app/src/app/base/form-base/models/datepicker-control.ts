@@ -13,8 +13,8 @@ export class DatePickerControl extends BaseControl {
   disabledDates?: Array<Date>;
   disabledDays?: Array<number>;
   showButtonBar?: boolean;
-  view?: 'year' | 'month' | 'date';
-  selectionMode?: 'single' | 'multiple' | 'range';
+  view?: string;
+  selectionMode?: string;
   defaultDate?: Date;
   showIcon?: boolean;
 

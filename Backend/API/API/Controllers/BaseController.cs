@@ -25,10 +25,10 @@ namespace API.Controllers
             _service = service;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
+        [HttpPost("GetData")]
+        public async Task<IActionResult> GetData(Page page)
         {
-            var result = await _service.GetAll();
+            var result = await _service.GetData(page);
             return ResponseResult(result);
         }
 

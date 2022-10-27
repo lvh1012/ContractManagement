@@ -7,7 +7,19 @@
 
         public int TotalPage { get; set; }
         public int TotalRow { get; set; }
-        public int PageNumber { get; set; } = 1;
+        private int _pageNumber = 1;
+        public int PageNumber
+        {
+            get
+            {
+                return _pageNumber;
+            }
+            set
+            {
+                if (value < 1) _pageNumber = 1;
+                else _pageNumber = value;
+            }
+        }
         private int _pageSize = 15;
         public int PageSize
         {

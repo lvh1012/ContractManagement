@@ -23,11 +23,12 @@
             Page = page;
         }
 
-        public BaseResult(bool success, int status, TModel data)
+        public BaseResult(bool success, int status, TModel data, Page page)
         {
             Success = success;
             Status = status;
             Data = data;
+            Page = page;
         }
 
         public BaseResult(bool success, int status, string? message)
@@ -37,9 +38,14 @@
             Message = message;
         }
 
-        public static BaseResult<TModel> ReturnWithData(TModel data)
+        public static BaseResult<TModel> ReturnWithData(TModel data, Page page = null)
         {
-            return new BaseResult<TModel>(true, StatusCodes.Status200OK, data);
+            //if (page == null)
+            //{
+            //    page = new Page();
+            //}
+
+            return new BaseResult<TModel>(true, StatusCodes.Status200OK, data, page);
         }
 
         public static BaseResult<TModel> ReturnWithError(string message)

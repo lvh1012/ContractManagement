@@ -3,6 +3,7 @@ using API.Repository.Interface;
 using API.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace API.Services
 {
@@ -51,6 +52,28 @@ namespace API.Services
             }
             return BaseResult<TModel>.ReturnWithData(model);
 
+        }
+
+        public async Task<BaseResult<List<TModel>>> GetData(Page page)
+        {
+            var totalRow = await _repository.GetAll().CountAsync();
+            var totalPage = (int)Math.Ceiling(totalRow / (double)page.PageSize);
+            if (page.PageNumber > totalPage)
+            {
+                page.PageNumber = totalPage;
+            }
+
+            page.TotalRow = totalRow;
+            page.TotalPage = totalPage;
+
+            var data = await GetPage(page);
+            return BaseResult<List<TModel>>.ReturnWithData(data.Data, page);
+        }
+
+        public async Task<BaseResult<List<TModel>>> GetPage(Page page)
+        {
+            var data = await _repository.GetAll().Skip((page.PageNumber - 1) * page.PageSize).Take(page.PageSize).ToListAsync();
+            return BaseResult<List<TModel>>.ReturnWithData(data);
         }
     }
 }

@@ -4,6 +4,8 @@ using API.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace API.Services
 {
@@ -56,14 +58,14 @@ namespace API.Services
 
         public async Task<BaseResult<List<TModel>>> GetData(Page page)
         {
-            var data = await GetPage(page);
+            var query = _repository.GetAll();
+            var data = await GetPage(query, page);
             return BaseResult<List<TModel>>.ReturnWithData(data.Data, page);
         }
 
-        public async Task<BaseResult<List<TModel>>> GetPage(Page page)
+        public async Task<BaseResult<List<TModel>>> GetPage(IQueryable<TModel> query, Page page)
         {
-            var queryData =  _repository.GetAll(); // them filter
-            var totalRow = await queryData.CountAsync();
+            var totalRow = await query.CountAsync();
             var totalPage = (int)Math.Ceiling(totalRow / (double)page.PageSize);
             if (page.PageNumber > totalPage)
             {
@@ -73,7 +75,7 @@ namespace API.Services
             page.TotalRow = totalRow;
             page.TotalPage = totalPage;
 
-            var data = await queryData.WhereDynamic(x => "x.name like").Skip((page.PageNumber - 1) * page.PageSize).Take(page.PageSize).ToListAsync();
+            var data = await query.Skip((page.PageNumber - 1) * page.PageSize).Take(page.PageSize).ToListAsync();
             return BaseResult<List<TModel>>.ReturnWithData(data);
         }
 
@@ -82,5 +84,59 @@ namespace API.Services
             var data = await _repository.GetAll().SelectManyDynamic(r => "r.Code").Skip((page.PageNumber - 1) * page.PageSize).Take(page.PageSize).ToListAsync();
             return BaseResult<List<object>>.ReturnWithData(data);
         }
+
+        public static Expression<Func<TModel, bool>> CreatePredicate(Filter filter)
+        {
+            var field = filter.Field;
+            var value = filter.Value;
+            var op = filter.Operator;
+
+            var xType = typeof(TModel);
+            var x = Expression.Parameter(xType, "x");
+            var column = xType.GetProperties().FirstOrDefault(p => p.Name == field);
+
+            Expression body = (Expression)Expression.Constant(true);
+            if (column != null)
+            {
+                var me = Expression.PropertyOrField(x, field);
+                var constant = Expression.Constant(value);
+
+                if (op.Equals(Operator.Less))
+                {
+                    body = Expression.LessThan(me, constant);
+                }
+                else if (op.Equals(Operator.LessOrEqual))
+                {
+                    body = Expression.LessThanOrEqual(me, constant);
+                }
+                else if (op.Equals(Operator.Greater))
+                {
+                    body = Expression.GreaterThan(me, constant);
+                }
+                else if (op.Equals(Operator.GreaterOrEqual))
+                {
+                    body = Expression.GreaterThanOrEqual(me, constant);
+                }
+                else if (op.Equals(Operator.Equal))
+                {
+                    body = Expression.Equal(me, constant);
+                }
+                else if (op.Equals(Operator.NotEqual))
+                {
+                    body = Expression.NotEqual(me, constant);
+                }
+                else if (op.Equals(Operator.Contain))
+                {
+                    //body = Expression.Call(typeof(Program).GetMethod("Like",BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public), me, constant);
+                }
+                else
+                {
+                    body = (Expression)Expression.Constant(true);
+                }
+            }
+
+            return Expression.Lambda<Func<TModel, bool>>(body, x);
+        }
+
     }
 }

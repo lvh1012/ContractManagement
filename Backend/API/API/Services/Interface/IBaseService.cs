@@ -6,7 +6,7 @@ namespace API.Services.Interface
 {
     public interface IBaseService<TModel>
     {
-        Task<BaseResult<List<TModel>>> GetPage(Page page);
+        Task<BaseResult<List<TModel>>> GetPage(IQueryable<TModel> query, Page page);
         Task<BaseResult<List<TModel>>> GetData(Page page);
         Task<BaseResult<List<object>>> GetDataDynamic(Page page);
         Task<BaseResult<List<TModel>>> GetAll();

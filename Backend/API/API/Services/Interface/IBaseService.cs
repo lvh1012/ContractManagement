@@ -8,6 +8,7 @@ namespace API.Services.Interface
     {
         Task<BaseResult<List<TModel>>> GetPage(Page page);
         Task<BaseResult<List<TModel>>> GetData(Page page);
+        Task<BaseResult<List<object>>> GetDataDynamic(Page page);
         Task<BaseResult<List<TModel>>> GetAll();
         Task<BaseResult<TModel>> GetById(Guid id);
         Task<BaseResult<TModel>> Insert(TModel model);

@@ -56,7 +56,14 @@ namespace API.Services
 
         public async Task<BaseResult<List<TModel>>> GetData(Page page)
         {
-            var totalRow = await _repository.GetAll().CountAsync();
+            var data = await GetPage(page);
+            return BaseResult<List<TModel>>.ReturnWithData(data.Data, page);
+        }
+
+        public async Task<BaseResult<List<TModel>>> GetPage(Page page)
+        {
+            var queryData =  _repository.GetAll(); // them filter
+            var totalRow = await queryData.CountAsync();
             var totalPage = (int)Math.Ceiling(totalRow / (double)page.PageSize);
             if (page.PageNumber > totalPage)
             {
@@ -66,14 +73,14 @@ namespace API.Services
             page.TotalRow = totalRow;
             page.TotalPage = totalPage;
 
-            var data = await GetPage(page);
-            return BaseResult<List<TModel>>.ReturnWithData(data.Data, page);
+            var data = await queryData.WhereDynamic(x => "x.name like").Skip((page.PageNumber - 1) * page.PageSize).Take(page.PageSize).ToListAsync();
+            return BaseResult<List<TModel>>.ReturnWithData(data);
         }
 
-        public async Task<BaseResult<List<TModel>>> GetPage(Page page)
+        public async Task<BaseResult<List<object>>> GetDataDynamic(Page page)
         {
-            var data = await _repository.GetAll().Skip((page.PageNumber - 1) * page.PageSize).Take(page.PageSize).ToListAsync();
-            return BaseResult<List<TModel>>.ReturnWithData(data);
+            var data = await _repository.GetAll().SelectManyDynamic(r => "r.Code").Skip((page.PageNumber - 1) * page.PageSize).Take(page.PageSize).ToListAsync();
+            return BaseResult<List<object>>.ReturnWithData(data);
         }
     }
 }

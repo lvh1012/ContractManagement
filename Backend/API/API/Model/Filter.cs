@@ -4,6 +4,13 @@
     {
         public string Field { get; set; }
         public string Operator { get; set; }
-        public string Value { get; set; }
+        public dynamic Value { get; set; }
+
+        public Filter(string field, string @operator, dynamic value)
+        {
+            Field = field;
+            Operator = @operator;
+            Value = value;
+        }
     }
 }

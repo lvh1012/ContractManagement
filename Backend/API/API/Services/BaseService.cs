@@ -58,7 +58,9 @@ namespace API.Services
 
         public async Task<BaseResult<List<TModel>>> GetData(Page page)
         {
-            var query = _repository.GetAll();
+            var filter = new Filter("Code", Operator.Contain, "ing");
+            var ex = CreatePredicate(filter);
+            var query = _repository.GetAll().Where(ex);
             var data = await GetPage(query, page);
             return BaseResult<List<TModel>>.ReturnWithData(data.Data, page);
         }
@@ -127,7 +129,7 @@ namespace API.Services
                 }
                 else if (op.Equals(Operator.Contain))
                 {
-                    //body = Expression.Call(typeof(Program).GetMethod("Like",BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public), me, constant);
+                    body = Expression.Call(me, typeof(string).GetMethod("Contains", new[] { typeof(string) }), constant);
                 }
                 else
                 {
@@ -138,5 +140,18 @@ namespace API.Services
             return Expression.Lambda<Func<TModel, bool>>(body, x);
         }
 
+        public static Expression<Func<TModel, bool>> CreatePredicate(List<Filter> filters)
+        {
+            var xType = typeof(TModel);
+            var x = Expression.Parameter(xType, "x");
+
+            Expression body = (Expression)Expression.Constant(true);
+            foreach (var filter in filters)
+            {
+                body = Expression.AndAlso(body, CreatePredicate(filter).Body);
+            }
+
+            return Expression.Lambda<Func<TModel, bool>>(body, x);
+        }
     }
 }

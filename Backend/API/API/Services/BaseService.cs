@@ -3,9 +3,11 @@ using API.Repository.Interface;
 using API.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using Z.Expressions;
 
 namespace API.Services
 {
@@ -58,9 +60,9 @@ namespace API.Services
 
         public async Task<BaseResult<List<TModel>>> GetData(Page page)
         {
-            var filter = new Filter("Code", Operator.Contain, "ing");
-            var ex = CreatePredicate(filter);
-            var query = _repository.GetAll().Where(ex);
+            var filter = new Filter("price", Operator.Equal, 99);
+            var ex = CreatePredicateForFilter(filter);
+            var query = _repository.GetAll().Where(ex).OrderByDescending(CreateSelector("price"));
             var data = await GetPage(query, page);
             return BaseResult<List<TModel>>.ReturnWithData(data.Data, page);
         }
@@ -87,7 +89,16 @@ namespace API.Services
             return BaseResult<List<object>>.ReturnWithData(data);
         }
 
-        public static Expression<Func<TModel, bool>> CreatePredicate(Filter filter)
+        public static Expression<Func<TModel, object>> CreateSelector(string field)
+        {
+            var xType = typeof(TModel);
+            var x = Expression.Parameter(xType, "x");
+            var column = xType.GetProperties().FirstOrDefault(p => string.Equals(p.Name, field, StringComparison.OrdinalIgnoreCase));
+            Expression conversion = Expression.Convert(Expression.PropertyOrField(x, column.Name), typeof(object));   //important to use the Expression.Convert
+            return Expression.Lambda<Func<TModel, object>>(conversion, x);
+        }
+
+        public static Expression<Func<TModel, bool>> CreatePredicateForFilter(Filter filter)
         {
             var field = filter.Field;
             var value = filter.Value;
@@ -95,12 +106,12 @@ namespace API.Services
 
             var xType = typeof(TModel);
             var x = Expression.Parameter(xType, "x");
-            var column = xType.GetProperties().FirstOrDefault(p => p.Name == field);
+            var column = xType.GetProperties().FirstOrDefault(p => string.Equals(p.Name, field, StringComparison.OrdinalIgnoreCase));
 
             Expression body = (Expression)Expression.Constant(true);
             if (column != null)
             {
-                var me = Expression.PropertyOrField(x, field);
+                var me = Expression.PropertyOrField(x, column.Name);
                 var constant = Expression.Constant(value);
 
                 if (op.Equals(Operator.Less))
@@ -140,7 +151,7 @@ namespace API.Services
             return Expression.Lambda<Func<TModel, bool>>(body, x);
         }
 
-        public static Expression<Func<TModel, bool>> CreatePredicate(List<Filter> filters)
+        public static Expression<Func<TModel, bool>> CreatePredicateForFilter(List<Filter> filters)
         {
             var xType = typeof(TModel);
             var x = Expression.Parameter(xType, "x");
@@ -148,7 +159,7 @@ namespace API.Services
             Expression body = (Expression)Expression.Constant(true);
             foreach (var filter in filters)
             {
-                body = Expression.AndAlso(body, CreatePredicate(filter).Body);
+                body = Expression.AndAlso(body, CreatePredicateForFilter(filter).Body);
             }
 
             return Expression.Lambda<Func<TModel, bool>>(body, x);
